@@ -21,10 +21,7 @@
     <Reference Include="Microsoft.AspNetCore.WebSockets" />
     <Reference Include="Microsoft.Extensions.Hosting" />
 
-    <!-- Dependencies of ws-proxy sources -->
-    <Reference Include="Newtonsoft.Json" />
-    <Reference Include="Mono.Cecil" />
-    <Reference Include="Microsoft.CodeAnalysis.CSharp" />
+    <Reference Include="Microsoft.NETCore.BrowserDebugHost.Transport" />
   </ItemGroup>
 
 </Project>

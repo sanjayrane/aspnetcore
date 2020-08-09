@@ -6,7 +6,7 @@ using System.Net;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using WebAssembly.Net.Debugging;
+using Microsoft.WebAssembly.Diagnostics;
 
 namespace Microsoft.AspNetCore.Components.WebAssembly.DebugProxy
 {
@@ -37,7 +37,7 @@ namespace Microsoft.AspNetCore.Components.WebAssembly.DebugProxy
                     var loggerFactory = context.RequestServices.GetRequiredService<ILoggerFactory>();
                     var browserUri = new Uri(context.Request.Query["browser"]);
                     var ideSocket = await context.WebSockets.AcceptWebSocketAsync();
-                    await new MonoProxy(loggerFactory).Run(browserUri, ideSocket);
+                    await new DebuggerProxy(loggerFactory).Run(browserUri, ideSocket);
                 });
             });
         }
