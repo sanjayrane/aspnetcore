@@ -233,7 +233,7 @@ namespace Microsoft.AspNetCore.Server.IIS.Core
                 // Synchronize access to native methods that might run in parallel with IO loops
                 lock (_contextLock)
                 {
-                    return NativeMethods.HttpTryGetServerVariable(_pInProcessHandler, variableName, out var value) ? value : null;
+                    return NativeMethods.HttpTryGetServerVariable(_requestNativeHandle, variableName, out var value) ? value : null;
                 }
             }
             set
@@ -246,7 +246,7 @@ namespace Microsoft.AspNetCore.Server.IIS.Core
                 // Synchronize access to native methods that might run in parallel with IO loops
                 lock (_contextLock)
                 {
-                    NativeMethods.HttpSetServerVariable(_pInProcessHandler, variableName, value);
+                    NativeMethods.HttpSetServerVariable(_requestNativeHandle, variableName, value);
                 }
             }
         }
@@ -307,7 +307,7 @@ namespace Microsoft.AspNetCore.Server.IIS.Core
             HasStartedConsumingRequestBody = false;
 
             // Upgrade async will cause the stream processing to go into duplex mode
-            AsyncIO = new WebSocketsAsyncIOEngine(_contextLock, _pInProcessHandler);
+            AsyncIO = new WebSocketsAsyncIOEngine(_contextLock, _requestNativeHandle);
 
             await InitializeResponse(flushHeaders: true);
 
@@ -381,7 +381,7 @@ namespace Microsoft.AspNetCore.Server.IIS.Core
         internal IHttpResponseTrailersFeature GetResponseTrailersFeature()
         {
             // Check version is above 2.
-            if (HttpVersion >= System.Net.HttpVersion.Version20 && NativeMethods.HttpSupportTrailer(_pInProcessHandler))
+            if (HttpVersion >= System.Net.HttpVersion.Version20 && NativeMethods.HttpSupportTrailer(_requestNativeHandle))
             {
                 return this;
             }
@@ -398,7 +398,7 @@ namespace Microsoft.AspNetCore.Server.IIS.Core
         internal IHttpResetFeature GetResetFeature()
         {
             // Check version is above 2.
-            if (HttpVersion >= System.Net.HttpVersion.Version20 && NativeMethods.HttpSupportTrailer(_pInProcessHandler))
+            if (HttpVersion >= System.Net.HttpVersion.Version20 && NativeMethods.HttpSupportTrailer(_requestNativeHandle))
             {
                 return this;
             }
@@ -419,12 +419,12 @@ namespace Microsoft.AspNetCore.Server.IIS.Core
 
         internal unsafe void SetResetCode(int errorCode)
         {
-            NativeMethods.HttpResetStream(_pInProcessHandler, (ulong)errorCode);
+            NativeMethods.HttpResetStream(_requestNativeHandle, (ulong)errorCode);
         }
 
         void IHttpResponseBodyFeature.DisableBuffering()
         {
-            NativeMethods.HttpDisableBuffering(_pInProcessHandler);
+            NativeMethods.HttpDisableBuffering(_requestNativeHandle);
             DisableCompression();
         }
 
