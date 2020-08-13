@@ -15,7 +15,7 @@ using System.Net.Http;
 using Microsoft.Graph;
 #endif
 using Microsoft.AspNetCore.Mvc;
-#if (OrganizationalAuth || IndividualB2CAuth)
+#if (OrganizationalAuth || (IndividualB2CAuth && !Hosted))
 using Microsoft.Identity.Web.Resource;
 #endif
 using Microsoft.Extensions.Logging;
@@ -101,7 +101,7 @@ namespace ComponentsWebAssembly_CSharp.Server.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-#if (OrganizationalAuth || IndividualB2CAuth)
+#if (OrganizationalAuth || (IndividualB2CAuth && !Hosted))
             HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
 
 #endif
