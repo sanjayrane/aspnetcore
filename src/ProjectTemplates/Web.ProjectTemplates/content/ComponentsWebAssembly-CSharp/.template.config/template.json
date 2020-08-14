@@ -340,7 +340,7 @@
       "type": "parameter",
       "datatype": "string",
       "replaces": "api-scope",
-      "defaultValue": "user_impersonation",
+      "defaultValue": "access_as_user",
       "description": "The API scope the client needs to request to provision an access token. (use with IndividualB2C, SingleOrg)."
     },
     "TenantId": {

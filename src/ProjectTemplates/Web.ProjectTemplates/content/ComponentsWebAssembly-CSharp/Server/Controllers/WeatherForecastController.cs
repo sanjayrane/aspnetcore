@@ -15,7 +15,7 @@ using System.Net.Http;
 using Microsoft.Graph;
 #endif
 using Microsoft.AspNetCore.Mvc;
-#if (OrganizationalAuth || (IndividualB2CAuth && !Hosted))
+#if (OrganizationalAuth || IndividualB2CAuth)
 using Microsoft.Identity.Web.Resource;
 #endif
 using Microsoft.Extensions.Logging;
@@ -38,7 +38,7 @@ namespace ComponentsWebAssembly_CSharp.Server.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
 
         // The Web API will only accept tokens 1) for users, and 2) having the access_as_user scope for this API
-        static readonly string[] scopeRequiredByApi = new string[] { "access_as_user" };
+        static readonly string[] scopeRequiredByApi = new string[] { "api-scope" };
 
 #if (GenerateApi)
         private readonly IDownstreamWebApi _downstreamWebApi;
@@ -101,7 +101,7 @@ namespace ComponentsWebAssembly_CSharp.Server.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
-#if (OrganizationalAuth || (IndividualB2CAuth && !Hosted))
+#if (OrganizationalAuth || IndividualB2CAuth)
             HttpContext.VerifyUserHasAnyAcceptedScope(scopeRequiredByApi);
 
 #endif
